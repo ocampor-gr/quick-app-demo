@@ -1,0 +1,36 @@
+services:
+  nginx-proxy:
+    build:
+      context: proxy
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - "/var/log/nginx:/var/log/nginx"
+    depends_on:
+      - frontend
+  frontend:
+    image: frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    environment:
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - AUTH_URL=${AUTH_URL}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
+    ports:
+      - "3000:3000"
+    entrypoint: ["bun", "./server.js"]
+  backend:
+    image: backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+    ports:
+      - "8000:8000"
+    entrypoint: [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000" ]

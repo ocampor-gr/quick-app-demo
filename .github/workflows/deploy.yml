@@ -1,0 +1,39 @@
+name: Deploy to Elastic Beanstalk (AWS CLI)
+
+on:
+  workflow_run:
+    workflows: ["Semgrep CE scan"]
+    types:
+      - completed
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+    
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        
+    - name: Install AWS CLI and EB CLI
+      run: |
+        pip install awscli awsebcli --upgrade
+
+    - name: Deploy to Elastic Beanstalk
+      env:
+        
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        
+      run: bash ./scripts/deploy.sh

@@ -1,0 +1,18 @@
+{
+  "template": "https://github.com/ocampor-gr/quick-app-template",
+  "commit": "035c862ad864c104f326d6e4880089549f176121",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "github_username": "ocampor-gh",
+      "pypi_package_name": "quick-app",
+      "environment": "prod",
+      "project_slug": "quick_app",
+      "project_short_description": "Python Boilerplate contains all the boilerplate you need to create an App.",
+      "__gh_slug": "ocampor-gh/quick_app",
+      "_template": "https://github.com/ocampor-gr/quick-app-template",
+      "_commit": "035c862ad864c104f326d6e4880089549f176121"
+    }
+  },
+  "directory": null
+}
